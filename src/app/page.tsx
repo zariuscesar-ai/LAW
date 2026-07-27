@@ -229,9 +229,9 @@ export default function LandingPage() {
             © {new Date().getFullYear()} DocReview AI. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <Link href="/disclaimer" className="hover:text-foreground transition-colors">AI Disclaimer</Link>
           </div>
         </div>
       </footer>

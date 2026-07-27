@@ -150,6 +150,14 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* AI Disclaimer Banner */}
+      <div className="bg-amber-50 border-b border-amber-200 px-4 py-2">
+        <p className="text-center text-xs text-amber-800 max-w-4xl mx-auto">
+          ⚠️ <strong>AI-Generated Analysis:</strong> DocReview AI assists with document review but is not a substitute for professional legal judgment. All AI outputs must be reviewed by a licensed attorney.{" "}
+          <Link href="/disclaimer" className="underline hover:text-amber-900 font-medium">Full Disclaimer</Link>
+        </p>
+      </div>
+
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
