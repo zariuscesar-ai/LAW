@@ -10,20 +10,30 @@ import {
   ClipboardList,
   Loader2,
   ArrowLeft,
+  LogOut,
+  User,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 import type { DocumentAnalysis } from "@/lib/ai";
 
 type Tab = "summary" | "risks" | "clauses" | "obligations" | "dates";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<DocumentAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>("summary");
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const f = acceptedFiles[0];
@@ -149,12 +159,14 @@ export default function DashboardPage() {
             </Link>
             <h1 className="text-xl font-semibold text-gray-900">DocReview AI</h1>
           </div>
-          <Link
-            href="/"
-            className="text-sm text-gray-500 hover:text-gray-700 font-medium"
+          <button
+            onClick={handleSignOut}
+            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors"
           >
-            ← Back to home
-          </Link>
+            <User className="w-4 h-4" />
+            <span className="hidden sm:inline">Sign out</span>
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </header>
 
