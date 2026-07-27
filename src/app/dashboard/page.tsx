@@ -41,23 +41,48 @@ export default function DashboardPage() {
     setFile(f);
     setError(null);
     setAnalysis(null);
+    setText("");
+    setLoading(true);
 
-    // Read file as text
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setText((e.target?.result as string) || "");
-    };
-    reader.onerror = () => {
-      setError("Failed to read file. Please try again.");
-    };
+    try {
+      // Plain text files: read directly in browser
+      if (f.type === "text/plain" || f.name.endsWith(".txt")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setText((e.target?.result as string) || "");
+          setLoading(false);
+        };
+        reader.onerror = () => {
+          setError("Failed to read file.");
+          setLoading(false);
+        };
+        reader.readAsText(f);
+        return;
+      }
 
-    if (f.type === "application/pdf") {
-      setError(
-        "PDF text extraction requires a server. For now, paste document text below or upload a .txt file."
-      );
-      return;
+      // PDF and DOCX: send to server for extraction
+      const formData = new FormData();
+      formData.append("file", f);
+
+      const res = await fetch("/api/extract-text", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json();
+
+      if (!json.success) {
+        setError(json.error || "Failed to extract text");
+        setLoading(false);
+        return;
+      }
+
+      setText(json.data.text);
+    } catch (err) {
+      setError("Failed to process file. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    reader.readAsText(f);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
