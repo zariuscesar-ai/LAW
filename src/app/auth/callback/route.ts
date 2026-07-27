@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
+
+type SetCookie = {
+  name: string;
+  value: string;
+  options?: Record<string, unknown>;
+};
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -15,7 +21,7 @@ export async function GET(request: NextRequest) {
           getAll() {
             return request.cookies.getAll();
           },
-          setAll(cookiesToSet: CookieOptions[]) {
+          setAll(cookiesToSet: SetCookie[]) {
             cookiesToSet.forEach(({ name, value, options }) =>
               request.cookies.set(name, value, options)
             );
