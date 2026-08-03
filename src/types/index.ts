@@ -1,4 +1,4 @@
-/** Shared types for the DocReview AI application */
+/** Shared types for the GlassEstimate application */
 
 // ── User & Auth ───────────────────────────────────────
 

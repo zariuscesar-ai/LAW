@@ -1,82 +1,100 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { FileCheck, ArrowLeft, Loader2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { Layers, ArrowLeft, Loader2, Check } from "lucide-react";
+import { signIn } from "next-auth/react";
 
-export default function SignupPage() {
+const planInfo: Record<string, { name: string; price: string; features: string[] }> = {
+  flat: {
+    name: "Flat Glass & Storefronts",
+    price: "$49/mo",
+    features: ["Photo-based visual estimator", "All systems & enclosure layouts", "Instant pricing & proposals"],
+  },
+  shower: {
+    name: "Shower Glass",
+    price: "$49/mo",
+    features: ["7 popular shower styles", "Glass type & hardware config", "Itemized pricing breakdown"],
+  },
+  bundle: {
+    name: "Flat + Shower Bundle",
+    price: "$79/mo",
+    features: ["Everything in Flat + Shower", "Multi-item projects", "Save $19/month"],
+  },
+};
+
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const planId = searchParams.get("plan") || "bundle";
+  const plan = planInfo[planId] || planInfo.bundle;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
+    const result = await signIn("credentials", {
       email,
       password,
-      options: {
-        data: { full_name: fullName },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
+      action: "signup",
+      redirect: false,
     });
 
-    if (error) {
-      setError(error.message);
+    if (result?.error) {
+      setError(result.error);
       setLoading(false);
       return;
     }
 
-    setSuccess(true);
-    setLoading(false);
     router.push("/dashboard");
   };
-
-  if (success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="max-w-md w-full text-center">
-          <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
-            <FileCheck className="w-6 h-6 text-green-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h1>
-          <p className="text-gray-600 mb-6">
-            We sent a confirmation link to <strong>{email}</strong>. Click it to
-            activate your account.
-          </p>
-          <Link
-            href="/login"
-            className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-          >
-            Go to login →
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="max-w-md w-full">
-        <div className="mb-8 text-center">
+        <div className="mb-6 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <FileCheck className="w-8 h-8 text-blue-600" />
-            <span className="text-2xl font-bold">DocReview AI</span>
+            <Layers className="w-8 h-8 text-blue-600" />
+            <span className="text-2xl font-bold">GlassEstimate</span>
           </div>
           <h1 className="text-xl font-semibold text-gray-900">
-            Start your free trial
+            Start your 7-day free trial
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            14 days free · No credit card required
+            No credit card required · Cancel anytime
           </p>
+        </div>
+
+        {/* Selected plan card */}
+        <div className="mb-5 rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-semibold text-blue-900">{plan.name}</span>
+            <span className="text-lg font-bold text-blue-700">{plan.price}</span>
+          </div>
+          <ul className="space-y-1">
+            {plan.features.map((f) => (
+              <li key={f} className="flex items-start gap-1.5 text-xs text-blue-800">
+                <Check className="h-3.5 w-3.5 text-blue-500 mt-0.5 shrink-0" />
+                {f}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-3 text-center">
+            <Link
+              href="/#services"
+              className="text-xs text-blue-600 hover:text-blue-800 underline"
+            >
+              Change plan
+            </Link>
+          </div>
         </div>
 
         <form
@@ -167,5 +185,17 @@ export default function SignupPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    }>
+      <SignupForm />
+    </Suspense>
   );
 }

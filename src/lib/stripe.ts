@@ -17,48 +17,44 @@ export function getStripe(): Stripe {
  * Create these products + prices in Stripe first.
  */
 export const PLANS = {
-  starter: {
-    id: "starter",
-    name: "Starter",
-    priceCents: 2900, // $29/mo
-    documentsPerMonth: 10,
+  flat: {
+    id: "flat",
+    name: "Flat Glass & Storefronts",
+    priceCents: 4900, // $49/mo
     features: [
-      "10 document analyses per month",
-      "Plain-English summaries",
-      "Risk flag detection",
-      "Email support",
+      "Photo-based visual estimator",
+      "All systems & enclosure layouts",
+      "Doors, sidelites & transoms",
+      "Instant pricing & branded proposals",
+      "E-signature & invoicing",
     ],
-    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_STARTER || "",
+    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_FLAT || "",
   },
-  pro: {
-    id: "pro",
-    name: "Professional",
+  shower: {
+    id: "shower",
+    name: "Shower Glass",
+    priceCents: 4900, // $49/mo
+    features: [
+      "7 shower styles supported",
+      "Glass type & thickness options",
+      "Hardware finish configurator",
+      "Cutout & notch placement",
+      "Itemized pricing breakdown",
+    ],
+    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_SHOWER || "",
+  },
+  bundle: {
+    id: "bundle",
+    name: "Flat + Shower Bundle",
     priceCents: 7900, // $79/mo
-    documentsPerMonth: 50,
     features: [
-      "50 document analyses per month",
-      "Everything in Starter",
-      "Key clause extraction",
-      "Obligation & deadline tracking",
-      "Export to PDF",
-      "Priority support",
+      "Everything in Flat Glass",
+      "Everything in Shower Glass",
+      "Multi-item project support",
+      "Hardware & finish configurator",
+      "Save $19/month",
     ],
-    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO || "",
-  },
-  business: {
-    id: "business",
-    name: "Business",
-    priceCents: 19900, // $199/mo
-    documentsPerMonth: 999, // effectively unlimited
-    features: [
-      "Unlimited document analyses",
-      "Everything in Professional",
-      "Multi-user team access",
-      "Custom clause templates",
-      "API access",
-      "Dedicated account manager",
-    ],
-    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_BUSINESS || "",
+    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_BUNDLE || "",
   },
 } as const;
 

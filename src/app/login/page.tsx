@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FileCheck, ArrowLeft, Loader2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { Layers, ArrowLeft, Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,13 +18,15 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const result = await signIn("credentials", {
       email,
       password,
+      action: "login",
+      redirect: false,
     });
 
-    if (error) {
-      setError(error.message);
+    if (result?.error) {
+      setError(result.error);
       setLoading(false);
       return;
     }
@@ -37,15 +39,11 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <FileCheck className="w-8 h-8 text-blue-600" />
-            <span className="text-2xl font-bold">DocReview AI</span>
+            <Layers className="w-8 h-8 text-blue-600" />
+            <span className="text-2xl font-bold">GlassEstimate</span>
           </div>
-          <h1 className="text-xl font-semibold text-gray-900">
-            Welcome back
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Sign in to your account
-          </p>
+          <h1 className="text-xl font-semibold text-gray-900">Welcome back</h1>
+          <p className="text-sm text-gray-500 mt-1">Sign in to your account</p>
         </div>
 
         <form

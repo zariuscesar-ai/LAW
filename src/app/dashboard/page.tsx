@@ -15,8 +15,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
 import type { DocumentAnalysis } from "@/lib/ai";
 
 type Tab = "summary" | "risks" | "clauses" | "obligations" | "dates";
@@ -31,7 +31,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<Tab>("summary");
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    await signOut({ redirect: false });
     router.push("/login");
   };
 
@@ -178,7 +178,7 @@ export default function DashboardPage() {
       {/* AI Disclaimer Banner */}
       <div className="bg-amber-50 border-b border-amber-200 px-4 py-2">
         <p className="text-center text-xs text-amber-800 max-w-4xl mx-auto">
-          ⚠️ <strong>AI-Generated Analysis:</strong> DocReview AI assists with document review but is not a substitute for professional legal judgment. All AI outputs must be reviewed by a licensed attorney.{" "}
+          ⚠️ <strong>AI-Assisted Estimation:</strong> GlassEstimate provides pricing estimates based on your inputs and rates. Always verify final pricing before presenting to clients.{" "}
           <Link href="/disclaimer" className="underline hover:text-amber-900 font-medium">Full Disclaimer</Link>
         </p>
       </div>
@@ -190,7 +190,7 @@ export default function DashboardPage() {
             <Link href="/" className="text-gray-500 hover:text-gray-700">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 className="text-xl font-semibold text-gray-900">DocReview AI</h1>
+            <h1 className="text-xl font-semibold text-gray-900">GlassEstimate</h1>
           </div>
           <button
             onClick={handleSignOut}

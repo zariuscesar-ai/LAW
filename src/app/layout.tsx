@@ -9,11 +9,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DocReview AI — AI-Powered Legal Document Analysis",
+  title: "GlassEstimate — Close glass jobs on the first visit",
   description:
-    "Upload any legal document. AI extracts key clauses, flags risks, and generates plain-English summaries. Built for small law firms and solo practitioners.",
-  keywords: ["AI legal document review", "contract analysis", "legal AI", "law firm software"],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://docreview.ai"),
+    "Photograph the opening, draw the system, show the client a realistic render, and hand them a priced proposal to sign — all in one visit. Built for small glass shops & solo contractors.",
+  keywords: ["glass estimation software", "shower glass estimator", "storefront estimator", "glazing software", "glass shop software"],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://glassestimate.app"),
   robots: { index: true, follow: true },
 };
 
